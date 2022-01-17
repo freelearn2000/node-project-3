@@ -1,0 +1,75 @@
+name: CI Production
+
+on:
+  pull_request:
+    branches: [master]
+  push:
+    branches: [master]
+  
+  
+env:
+  AZURE_WEBAPP_NAME: masterdeploy                                  # set this to your application's name
+  AZURE_WEBAPP_URL: https://masterdeploy.azurewebsites.net         # set application url
+  AZURE_WEBAPP_PACKAGE_PATH: '.'                                   # set this to the path to your web app project, defaults to the repository root
+  NODE_VERSION: '14.x'                                             # set this to the node version to use
+
+jobs:
+  build-and-deploy:
+    name: Build and Deploy to production
+    runs-on: ubuntu-latest
+    environment: production
+
+    steps:
+    - name: Checkout from repository
+      uses: actions/checkout@v2
+
+    - name: Cache dependencies
+      uses: actions/cache@v2
+      with:
+        path: ~/.npm
+        key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+        restore-keys: |
+          ${{ runner.os }}-node-
+    
+    - name: Setup Node.js ${{ env.NODE_VERSION }}
+      uses: actions/setup-node@v2
+      with:
+       node-version: ${{ env.NODE_VERSION }}
+
+    - name: Run npm install, compile
+      run: |
+        # Build and compile the project
+        npm install
+        npm run compile
+    - name: Code Analysis
+      run: echo "Do code analysis here..."
+
+    # - name: Upload Test coverage as Artifact
+    #   uses: actions/upload-artifact@v2
+    #   with:
+    #     name: codeanalysis_coverage
+    #     path: codecoverage
+
+    - name: Run Tests
+      run: echo "Run tests here..."
+
+    # - name: Upload Test coverage as Artifact
+    #   uses: actions/upload-artifact@v2
+    #   with:
+    #     name: test_coverage
+    #     path: testcoverage
+        
+    - name: Build project
+      if: github.event_name == 'push'
+      run: echo "Build the project"
+
+    - name: Upload Build folder as Artifact
+      if: github.event_name == 'push'
+      uses: actions/upload-artifact@v2
+      with:
+        name: build
+        path: build
+      
+    - name: Deploy to Production Server
+      if: github.event_name == 'push'
+      run: echo "Deploy the project"
