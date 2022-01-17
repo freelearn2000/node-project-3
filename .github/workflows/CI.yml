@@ -1,10 +1,10 @@
-name: CI Staging
+name: CI
 
 on:
   pull_request:
-    branches: [develop]
+    branches: [develop, master]
   push:
-    branches: [develop]
+    branches: [develop, master]
   
   
 env:
@@ -14,13 +14,12 @@ env:
   NODE_VERSION: '14.x'                                             # set this to the node version to use
 
 jobs:
-  build-and-deploy:
-    name: Build and Deploy to Staging
+  build:
     runs-on: ubuntu-latest
-    environment: production
+    # environment: production
 
     steps:
-    - name: Checkout from repository
+    - name: Checkout repository
       uses: actions/checkout@v2
 
     - name: Cache dependencies
@@ -36,40 +35,50 @@ jobs:
       with:
        node-version: ${{ env.NODE_VERSION }}
 
-    - name: Run npm install, compile
-      run: |
-        # Build and compile the project
-        npm install
-        npm run compile
-    - name: Code Analysis
+    - name: Install dependencies
+      run: npm ci
+
+    - name: Do Code Analysis
       run: echo "Do code analysis here..."
 
-    # - name: Upload Test coverage as Artifact
-    #   uses: actions/upload-artifact@v2
-    #   with:
-    #     name: codeanalysis_coverage
-    #     path: codecoverage
+    - name: Upload Code coverage as Artifact
+      # uses: actions/upload-artifact@v2
+      # with:
+      #   name: codeanalysis_coverage
+      #   path: codecoverage
+      run: echo "Upload code analysis coverage here..."
 
     - name: Run Tests
       run: echo "Run tests here..."
 
-    # - name: Upload Test coverage as Artifact
-    #   uses: actions/upload-artifact@v2
-    #   with:
-    #     name: test_coverage
-    #     path: testcoverage
+    - name: Upload Test coverage as Artifact
+      # uses: actions/upload-artifact@v2
+      # with:
+      #   name: test_coverage
+      #   path: testcoverage
+      run: echo "Upload test coverage here..."
         
     - name: Build project
       if: github.event_name == 'push'
-      run: echo "Build the project"
+      run: echo "Build the project here..."
 
     - name: Upload Build folder as Artifact
       if: github.event_name == 'push'
       uses: actions/upload-artifact@v2
       with:
-        name: build
+        name: Build
         path: build
-      
-    - name: Deploy to staging Server
-      if: github.event_name == 'push'
-      run: echo "Deploy the project"
+
+    - name: Create a Release
+      if: github.event_name == 'push' && github.ref == 'refs/head/master'
+      run: npx semantic-release
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+    - name: Deploy to Staging Server
+      if: github.event_name == 'push' && github.ref == 'refs/head/develop'
+      run: echo "Deploy build to staging here..."
+
+    - name: Deploy to Production Server
+      if: github.event_name == 'push' && github.ref == 'refs/head/master'
+      run: echo "Deploy build to production here..."
