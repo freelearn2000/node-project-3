@@ -70,15 +70,15 @@ jobs:
         path: build
 
     - name: Create a Release
-      if: github.event_name == 'push' && github.ref == 'refs/head/master'
+      if: github.event_name == 'push' && github.ref == 'refs/heads/master'
       run: npx semantic-release
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
     - name: Deploy to Staging Server
-      if: github.event_name == 'push' && github.ref == 'refs/head/develop'
+      if: github.event_name == 'push' && github.ref == 'refs/heads/develop'
       run: echo "Deploy build to staging here..."
 
     - name: Deploy to Production Server
-      if: github.event_name == 'push' && github.ref == 'refs/head/master'
+      if: github.event_name == 'push' && github.ref == 'refs/heads/master'
       run: echo "Deploy build to production here..."
