@@ -20,7 +20,7 @@ jobs:
     environment: production
 
     steps:
-    - name: Checkout from repository
+    - name: Checkout from master
       uses: actions/checkout@v2
 
     - name: Cache dependencies
