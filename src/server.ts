@@ -64,7 +64,7 @@ server.all( '/api/*', (req, res ) => {
 
 // Welcome message
 server.get( `*`, (req, res ) => {
-    res.status( 200 ).send( {message: `Welcome to NodeApp!!`} );
+    res.status( 200 ).send( {message: `Welcome to NodeApp!!!`} );
 } );
 
 // Handle GET requests not handled by Routes, send React App to Client
