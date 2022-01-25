@@ -1,8 +1,8 @@
-name: Notify on Release
+name: Notify on Issue
 
 on:
-  release:
-    types: [published]
+  issues:
+    types: [opened]
 
 jobs:
   slack-message:
@@ -13,6 +13,6 @@ jobs:
       run: |
         curl -X POST \
         -H 'Content-type: application/json' \
-        --data '{"text":"New Release ${{github.event.release.tag_name}} is out. <${{github.event.release.html_url}}|check it now...>"}' \
+        --data '{"text":"New Issue created. <${{github.event.issue.html_url}}|${{github.event.issue.title}}>"}' \
         --url ${{secrets.SLACK_WEBHOOK}}
         
