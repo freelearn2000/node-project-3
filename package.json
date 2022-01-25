@@ -1,7 +1,7 @@
 {
-  "name": "node-project1",
+  "name": "node-project3",
   "version": "1.0.0",
-  "description": "Node Project 1",
+  "description": "Node Project 3",
   "main": "server.js",
   "scripts": {
     "init": "tsc --init",
