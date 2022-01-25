@@ -69,6 +69,10 @@ jobs:
         name: Build
         path: build
 
+    - name: Add Additional Assets for Release
+      if: github.event_name == 'push' && github.ref == 'refs/heads/master'
+      run: zip -r build.zip ./build
+
     - name: Create a Release
       if: github.event_name == 'push' && github.ref == 'refs/heads/master'
       run: npx semantic-release
@@ -83,14 +87,14 @@ jobs:
       if: github.event_name == 'push' && github.ref == 'refs/heads/master'
       run: echo "Deploy build to production here..."
 
-    - name: Forcefully Action Fail!
-      run: exit 1
+    # - name: Forcefully Action Fail!
+    #   run: exit 1
 
     - name: Create Issue Action
       if: ${{ failure() }}
       uses: nashmaniac/create-issue-action@v1.1
       with:
-        title: Automated Issue for commit 
+        title: Automated Issue from Workflow
         token: ${{secrets.SEMANTIC_TOKEN}}
         assignees: ${{github.actor}}
         labels: workflow-failed
