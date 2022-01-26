@@ -87,8 +87,8 @@ jobs:
       if: github.event_name == 'push' && github.ref == 'refs/heads/master'
       run: echo "Deploy build to production here..."
 
-    - name: Forcefully Action Fail!
-      run: exit 1
+   # - name: Forcefully Action Fail!
+   #  run: exit 1
 
     - name: Create Issue Action
       if: ${{ failure() }}
