@@ -86,10 +86,7 @@ jobs:
     - name: Deploy to Production Server
       if: github.event_name == 'push' && github.ref == 'refs/heads/master'
       run: echo "Deploy build to production here..."
-
-    - name: Forcefully Action Fail!
-      run: exit 1
-
+      
     - name: Create Issue Action
       if: ${{ failure() }}
       uses: nashmaniac/create-issue-action@v1.1
