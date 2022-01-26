@@ -3,8 +3,7 @@ name: Notify On Issue
 on:
   issues:
     types: [opened]
-  pull_request:
-    types: [opened]
+  
 jobs:
   slack-message:
     runs-on: ubuntu-latest
