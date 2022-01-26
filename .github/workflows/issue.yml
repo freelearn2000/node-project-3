@@ -3,6 +3,8 @@ name: Notify On Issue
 on:
   issues:
     types: [opened]
+env:
+ GITHUB_TOKEN: ${{ secrets.SEMANTIC_TOKEN }}
   
 jobs:
   slack-message:
