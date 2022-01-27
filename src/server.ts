@@ -75,7 +75,7 @@ server.get( `*`, (req, res ) => {
 // first message -fix1
 // first message -fix3
 
-// Handle GET requests not handled by Routes, send React App to Client
+// Handle GET requests not handled by Routes, send React Application to Client
 // server.get( '*', (req, res) => {
 //     res.sendFile( path.resolve(__dirname, '../../node-project-2/src/client/index.html') );
 // });
