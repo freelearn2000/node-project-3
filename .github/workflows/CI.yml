@@ -89,6 +89,7 @@ jobs:
       run: echo "Deploy build to production here..."
       
     - name: Forcefully Action Fail!
+      if: github.event_name == 'push' && github.ref == 'refs/heads/develop'
       run: exit 1
 
     - name: Create Issue Action

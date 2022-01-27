@@ -1,4 +1,4 @@
-![](https://github.com/freelearn2000/node-project-3/workflows/CI/badge.svg)
+![](https://github.com/freelearn2000/node-project-3/workflows/CI/badge.svg?branch=develop)
 
 # Node Project 3
 
