@@ -3,8 +3,9 @@ name: Notify On Issue
 on:
   issues:
     types: [opened]
+
 env:
- GITHUB_TOKEN: ${{ secrets.SEMANTIC_TOKEN }}
+  GITHUB_TOKEN: ${{ secrets.SEMANTIC_TOKEN }}
   
 jobs:
   slack-message:
@@ -17,4 +18,3 @@ jobs:
         -H 'Content-type: application/json' \
         --data '{"text":"New Issue created. <${{github.event.issue.html_url}}|${{github.event.issue.title}}>"}' \
         --url ${{secrets.SLACK_WEBHOOK}}
-        
