@@ -10,3 +10,4 @@ This project host backend API's.
 - JavaScript
 - TypeScript
 - PostGres (Data)
+- NodeJS
