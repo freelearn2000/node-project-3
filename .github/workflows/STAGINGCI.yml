@@ -1,22 +1,22 @@
-name: PRODUCTION CI
+name:  STAGING CI
 
 on:
   pull_request:
-    branches: [master]
+    branches: [develop]
   push:
-    branches: [master]
+    branches: [develop]
   
   
 env:
-  AZURE_WEBAPP_NAME: productiondeploy                                 # set this to your application's name
-  AZURE_WEBAPP_URL: https://productiondeploy.azurewebsites.net        # set application url
+  AZURE_WEBAPP_NAME: stagingdeploy                                 # set this to your application's name
+  AZURE_WEBAPP_URL: https://stagingdeploy.azurewebsites.net        # set application url
   AZURE_WEBAPP_PACKAGE_PATH: '.'                                   # set this to the path to your web app project, defaults to the repository root
   NODE_VERSION: '14.x'                                             # set this to the node version to use
 
 jobs:
   build:
     runs-on: ubuntu-latest
-    environment: production
+    environment: staging
 
     steps:
     - name: Checkout repository
@@ -69,31 +69,20 @@ jobs:
         name: Build
         path: build
 
-    - name: Add Build Assets for Release
-      if: github.event_name == 'push' && github.ref == 'refs/heads/master'
-      run: zip -r build.zip build
-
-
-    - name: Create a Release
-      if: github.event_name == 'push' && github.ref == 'refs/heads/master'
-      run: npx semantic-release
-      env:
-        GITHUB_TOKEN: ${{ secrets.SEMANTIC_TOKEN }}
-
-    - name: Deploy to Production Server
-      if: github.event_name == 'push' && github.ref == 'refs/heads/master'
-      run: echo "Deploy build to production here..."
-      
-    - name: Forcefully Action Fail!
+    - name: Deploy to Staging Server
       if: github.event_name == 'push' && github.ref == 'refs/heads/develop'
-      run: exit 1
+      run: echo "Deploy build to staging here..."
+      
+    #- name: Forcefully Action Fail!
+     # if: github.event_name == 'push' && github.ref == 'refs/heads/develop'
+     # run: exit 1
 
     - name: Create Issue Action
       if: ${{ failure() }}
       uses: nashmaniac/create-issue-action@v1.1
       with:
-        title: Automated Issue from Production Workflow
+        title: Automated Issue from Staging Workflow
         token: ${{secrets.SEMANTIC_TOKEN}}
         assignees: ${{github.actor}}
         labels: workflow-failed
-        body: This issue was automatically created by GitHub Production Workflow ${{github.sha}}
+        body: This issue was automatically created by GitHub Staging Workflow ${{github.sha}}
