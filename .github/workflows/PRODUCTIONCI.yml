@@ -1,10 +1,10 @@
-name: CI
+name: PRODUCTION CI
 
 on:
   pull_request:
-    branches: [develop, master]
+    branches: [master]
   push:
-    branches: [develop, master]
+    branches: [master]
   
   
 env:
@@ -84,16 +84,16 @@ jobs:
       if: github.event_name == 'push' && github.ref == 'refs/heads/master'
       run: echo "Deploy build to production here..."
       
-    #- name: Forcefully Action Fail!
-     # if: github.event_name == 'push' && github.ref == 'refs/heads/develop'
-     # run: exit 1
+    - name: Forcefully Action Fail!
+      if: github.event_name == 'push' && github.ref == 'refs/heads/develop'
+      run: exit 1
 
     - name: Create Issue Action
       if: ${{ failure() }}
       uses: nashmaniac/create-issue-action@v1.1
       with:
-        title: Automated Issue from Workflow
+        title: Automated Issue from Production Workflow
         token: ${{secrets.SEMANTIC_TOKEN}}
         assignees: ${{github.actor}}
         labels: workflow-failed
-        body: This issue was automatically created by GitHub Workflow ${{github.sha}}
+        body: This issue was automatically created by GitHub Production Workflow ${{github.sha}}
