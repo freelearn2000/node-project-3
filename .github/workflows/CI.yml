@@ -1,12 +1,8 @@
 name:  CI
 
 on:
-  pull_request:
-    branches: [develop,master]
-  push:
-    branches: [develop,master]
-  
-  
+ [workflow_dispatch, pull_request, push]
+    
 env:
   NODE_VERSION: '14.x'                                             # set this to the node version to use
 
@@ -14,7 +10,6 @@ jobs:
   build:
     runs-on: ubuntu-latest
  
-
     steps:
     - name: Checkout repository
       uses: actions/checkout@v2
