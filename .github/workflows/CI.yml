@@ -57,6 +57,16 @@ jobs:
         name: Build
         path: build
         
+    - name: Create Issue Action
+      if: ${{ failure() }}
+      uses: nashmaniac/create-issue-action@v1.1
+      with:
+        title: Automated Issue from Staging Workflow
+        token: ${{secrets.SEMANTIC_TOKEN}}
+        assignees: ${{github.actor}}
+        labels: workflow-failed
+        body: This issue was automatically created by GitHub Staging Workflow ${{github.sha}}
+        
   deploy-staging:
     needs: [build]
    
@@ -83,12 +93,4 @@ jobs:
       if: github.event_name == 'push' && github.ref == 'refs/heads/master'
       run: echo "Deploy build to production here..."
       
-    - name: Create Issue Action
-      if: ${{ failure() }}
-      uses: nashmaniac/create-issue-action@v1.1
-      with:
-        title: Automated Issue from Staging Workflow
-        token: ${{secrets.SEMANTIC_TOKEN}}
-        assignees: ${{github.actor}}
-        labels: workflow-failed
-        body: This issue was automatically created by GitHub Staging Workflow ${{github.sha}}
+   
