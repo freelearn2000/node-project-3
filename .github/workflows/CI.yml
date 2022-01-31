@@ -8,28 +8,17 @@ on:
   
   
 env:
-  AZURE_WEBAPP_NAME: stagingdeploy                                 # set this to your application's name
-  AZURE_WEBAPP_URL: https://stagingdeploy.azurewebsites.net        # set application url
-  AZURE_WEBAPP_PACKAGE_PATH: '.'                                   # set this to the path to your web app project, defaults to the repository root
   NODE_VERSION: '14.x'                                             # set this to the node version to use
 
 jobs:
   build:
     runs-on: ubuntu-latest
-   # environment: staging
+ 
 
     steps:
     - name: Checkout repository
       uses: actions/checkout@v2
-
-    #- name: Cache dependencies
-     # uses: actions/cache@v2
-      #with:
-       # path: ~/.npm
-        #key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
-        #restore-keys: |
-         # ${{ runner.os }}-node-
-    
+      
     - name: Setup Node.js ${{ env.NODE_VERSION }}
       uses: actions/setup-node@v2
       with:
@@ -69,11 +58,31 @@ jobs:
       with:
         name: Build
         path: build
+        
+  deploy-staging:
+    needs: [build]
+    if: github.ref == 'refs/heads/develop'
+    runs-on: ubuntu-latest
+    
+    environment: 
+      name: staging
+      url:  https://stagingdeploy.azurewebsites.net         # set application url
 
+    steps:
     - name: Deploy to Staging Server
       if: github.event_name == 'push' && github.ref == 'refs/heads/develop'
       run: echo "Deploy build to staging here..."
       
+  deploy-production:
+    needs: [build]
+    if: github.ref == 'refs/heads/master'
+
+    runs-on: ubuntu-latest
+    environment: 
+      name: production
+      url:  https://productiondeploy.azurewebsites.net         # set application url
+
+    steps:
     - name: Deploy to Production Server
       if: github.event_name == 'push' && github.ref == 'refs/heads/master'
       run: echo "Deploy build to production here..."
