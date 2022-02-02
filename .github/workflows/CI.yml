@@ -57,6 +57,17 @@ jobs:
         name: Build
         path: build
         
+    - name: Add Build Assets for Release
+      if: github.event_name == 'push' && github.ref == 'refs/heads/master'
+      run: zip -r build.zip build
+
+
+    - name: Create a Release
+      if: github.event_name == 'push' && github.ref == 'refs/heads/master'
+      run: npx semantic-release
+      env:
+        GITHUB_TOKEN: ${{ secrets.SEMANTIC_TOKEN }}
+        
     - name: Create Issue Action
       if: ${{ failure() }}
       uses: nashmaniac/create-issue-action@v1.1
@@ -69,7 +80,6 @@ jobs:
         
   deploy-staging:
     needs: [build]
-   
     runs-on: ubuntu-latest
     environment: 
       name: staging
@@ -79,9 +89,18 @@ jobs:
     - name: Deploy to Staging Server
       run: echo "Deploy build to staging here..."
       
+    - name: Create Issue Action
+      if: ${{ failure() }}
+      uses: nashmaniac/create-issue-action@v1.1
+      with:
+        title: Automated Issue from staging deploy
+        token: ${{secrets.SEMANTIC_TOKEN}}
+        assignees: ${{github.actor}}
+        labels: workflow-failed
+        body: This issue was automatically created by GitHub Staging deploy ${{github.sha}}
+      
   deploy-production:
     needs: [build]
-   
     runs-on: ubuntu-latest
     environment: 
       name: production
@@ -90,5 +109,15 @@ jobs:
     steps:
     - name: Deploy to Production Server
       run: echo "Deploy build to production here..."
+      
+    - name: Create Issue Action
+      if: ${{ failure() }}
+      uses: nashmaniac/create-issue-action@v1.1
+      with:
+        title: Automated Issue from Production deploy
+        token: ${{secrets.SEMANTIC_TOKEN}}
+        assignees: ${{github.actor}}
+        labels: workflow-failed
+        body: This issue was automatically created by GitHub Production deploy ${{github.sha}}
       
    
