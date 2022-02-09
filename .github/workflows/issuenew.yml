@@ -1,6 +1,11 @@
 name: slack-notification
 
-on: [push, pull_request, issues]
+on:
+  issues:
+    types: [opened]
+
+env:
+  GITHUB_TOKEN: ${{ secrets.SEMANTIC_TOKEN }}
 
 jobs:
   slack-notifications:
