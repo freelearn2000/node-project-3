@@ -67,6 +67,7 @@ jobs:
       run: npx semantic-release
       env:
         GITHUB_TOKEN: ${{ secrets.SEMANTIC_TOKEN }}
+        
     - name: Send Slack Message
     - uses: ravsamhq/notify-slack-action@v1
       if: always()
