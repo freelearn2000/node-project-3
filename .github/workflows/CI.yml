@@ -67,15 +67,19 @@ jobs:
       run: npx semantic-release
       env:
         GITHUB_TOKEN: ${{ secrets.SEMANTIC_TOKEN }}
-    - name: Create Issue Action
-      if: ${{ failure() }}
-      uses: nashmaniac/create-issue-action@v1.1
+    - name: Send Slack Message
+    - uses: ravsamhq/notify-slack-action@v1
+      if: always()
       with:
-        title: Automated Issue from workflow
-        token: ${{secrets.SEMANTIC_TOKEN}}
-        assignees: ${{github.actor}}
-        labels: workflow-failed
-        body: This issue was automatically created by GitHub workflow ${{github.sha}}   
+       status: ${{ job.status }}
+       notification_title: '{workflow} has {status_message}'
+       message_format: '{emoji} *{workflow}* {status_message} in <{repo_url}|{repo}>'
+       footer: 'Linked Repo <{repo_url}|{repo}>'
+       notify_when: 'failure'
+       mention_users: 'D026RH7TSQ7'
+       mention_users_when: 'failure,warnings'
+    env:
+      SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK }}
   
       
   deploy-staging:
