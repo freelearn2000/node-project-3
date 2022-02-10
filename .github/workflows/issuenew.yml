@@ -1,0 +1,27 @@
+name: Notify On Issue
+
+on:
+  issues:
+    types: [opened]
+
+env:
+  GITHUB_TOKEN: ${{ secrets.SEMANTIC_TOKEN }}
+  
+jobs:
+  slack-message:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Send Slack Message
+    - uses: ravsamhq/notify-slack-action@v1
+      if: always()
+      with:
+       status: ${{ job.status }}
+       notification_title: '{workflow} has {status_message}'
+       message_format: '{emoji} *{workflow}* {status_message} in <{repo_url}|{repo}>'
+       footer: 'Linked Repo <{repo_url}|{repo}>'
+       notify_when: 'failure'
+       mention_users: 'D026RH7TSQ7'
+       mention_users_when: 'failure,warnings'
+    env:
+      SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK }}
