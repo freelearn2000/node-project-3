@@ -13,7 +13,7 @@ jobs:
     
     steps:
     - name: Send Slack Message
-    - uses: ravsamhq/notify-slack-action@v1
+      uses: ravsamhq/notify-slack-action@v1
       if: always()
       with:
        status: ${{ job.status }}
