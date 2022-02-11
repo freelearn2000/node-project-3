@@ -6,7 +6,7 @@ on:
 
 env:
   GITHUB_TOKEN: ${{ secrets.SEMANTIC_TOKEN }}
-  GITHUB_ACTOR: ${GITHUB_ACTOR}
+
 
 jobs:
   slack-notifications:
@@ -16,11 +16,15 @@ jobs:
       - name: Send message to Slack API
         uses: rtCamp/action-slack-notify@v2
         env:
-          SLACK_CHANNEL: github
-          SLACK_MSG_AUTHOR: ${{ env.GITHUB_ACTOR}}
-          SLACK_COLOR: ${{ job.status }} # or a specific color like 'good' or '#ff00ff'
-          SLACK_TITLE: Post Title
-          SLACK_USERNAME: freelearn
-          SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
+         SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
+        
+      - name: echo-default-env-variables
+        run: |
+            echo "Home: ${HOME}"
+            echo "GITHUB_WORKFLOW: ${GITHUB_WORKFLOW}"
+            echo "GITHUB_ACTIONS: ${GITHUB_ACTIONS}"
+            echo "GITHUB_ACTOR: ${GITHUB_ACTOR}"
+            echo "GITHUB_REPOSITORY: ${GITHUB_REPOSITORY}"
 
+     
        
