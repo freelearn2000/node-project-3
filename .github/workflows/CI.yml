@@ -92,7 +92,7 @@ jobs:
       uses: ravsamhq/notify-slack-action@v1
       with:
         status: ${{ job.steps.test.status }} 
-        notification_title: '{workflow} has {status_message}'
+        notification_title: '{workflow} has {status}'
         message_format: '{emoji} *{workflow}* {status_message} in <{repo_url}|{repo}>'
         footer: 'Linked to Repo <{repo_url}|{repo}>'
         
@@ -100,46 +100,4 @@ jobs:
        SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK }}
       
       
-  deploy-staging:
-    needs: [build]
-    runs-on: ubuntu-latest
-    environment: 
-      name: staging
-      url:  https://stagingdeploy.azurewebsites.net         # set application url
 
-    steps:
-    - name: Deploy to Staging Server
-      run: echo "Deploy build to staging here..."
-      
-    - name: Create Issue Action
-      if: ${{ failure() }}
-      uses: nashmaniac/create-issue-action@v1.1
-      with:
-        title: Automated Issue from staging deploy
-        token: ${{secrets.SEMANTIC_TOKEN}}
-        assignees: ${{github.actor}}
-        labels: workflow-failed
-        body: This issue was automatically created by GitHub Staging deploy ${{github.sha}}
-      
-  deploy-production:
-    needs: [build]
-    runs-on: ubuntu-latest
-    environment: 
-      name: production
-      url:  https://productiondeploy.azurewebsites.net         # set application url
-
-    steps:
-    - name: Deploy to Production Server
-      run: echo "Deploy build to production here..."
-      
-    - name: Create Issue Action
-      if: ${{ failure() }}
-      uses: nashmaniac/create-issue-action@v1.1
-      with:
-        title: Automated Issue from Production deploy
-        token: ${{secrets.SEMANTIC_TOKEN}}
-        assignees: ${{github.actor}}
-        labels: workflow-failed
-        body: This issue was automatically created by GitHub Production deploy ${{github.sha}}
-      
-   
