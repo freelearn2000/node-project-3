@@ -92,8 +92,8 @@ jobs:
       uses: ravsamhq/notify-slack-action@v1
       with:
         status: ${{ job.steps.test.status }} 
-        notification_title: '{workflow} has {steps.test.outcome}'
-        message_format: '{emoji} *{workflow}* {steps.test.outcome} in <{repo_url}|{repo}>'
+        notification_title: '{workflow} has {steps.test.status}'
+        message_format: '{emoji} *{workflow}* {steps.test.status} in <{repo_url}|{repo}>'
         footer: 'Linked to Repo <{repo_url}|{repo}>'
         
       env:
