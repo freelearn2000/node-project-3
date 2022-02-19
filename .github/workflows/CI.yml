@@ -39,6 +39,7 @@ jobs:
     - name: Run Tests
       run: npm run test
       id: test
+      continue-on-error: true
        
     - name: Deploy Test Report to GitHub Page
       if: always()
