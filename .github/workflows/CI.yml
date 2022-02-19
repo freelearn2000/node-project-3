@@ -87,18 +87,28 @@ jobs:
         labels: test-failed
         body:  '[Test Failed Report is out.](https://freelearn2000.github.io/node-project-3/index.html)'
         
-    - name: Report Status
-      if: always()
-      uses: ravsamhq/notify-slack-action@v1
+    - name: Send Error messge to  Slack
+      if: steps.test.outcome != 'success'
+      id: slack
+      uses: slackapi/slack-github-action@v1.18.0
       with:
-        status: ${{ job.steps.test.status }} 
-        notification_title: '{workflow} has {status_message}'
-        message_format: '{emoji} *{workflow}* {status_message} in <{repo_url}|{repo}>'
-        footer: '[Test Report is out.](https://freelearn2000.github.io/node-project-3/index.html)'
-        
-        
+        payload: |
+          {
+            "text":"" ,           
+            "blocks": 
+            [
+              {
+                "type": "section",
+                "text": {
+                  "type": "mrkdwn",
+                  "text": "*Test result: * ${{ steps.test.outcome }}\n *Test Report :* <https://freelearn2000.github.io/node-project-3/index.html>"
+                }
+              }
+
+            ]
+          }
       env:
-       SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK }}
-      
+        SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK }}
+        SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
       
 
