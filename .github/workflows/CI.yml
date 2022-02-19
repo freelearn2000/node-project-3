@@ -39,7 +39,7 @@ jobs:
     - name: Run Tests
       run: npm run test
       id: test
-      continue-on-error: true
+      
        
     - name: Deploy Test Report to GitHub Page
       if: always()
@@ -60,7 +60,7 @@ jobs:
         body:  '[Test Failed Report is out.](https://freelearn2000.github.io/node-project-3/index.html)'
         
     - name: Send Error messge to  Slack
-      if: steps.test.outcome != 'success'
+      if: always()
       id: slack
       uses: slackapi/slack-github-action@v1.18.0
       with:
