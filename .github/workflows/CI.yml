@@ -47,35 +47,6 @@ jobs:
         github_token: ${{ secrets.SEMANTIC_TOKEN }}
         publish_dir: ./testreports
         publish_branch: gh-pages
-
-   # - name: Upload Test coverage as Artifact
-      # uses: actions/upload-artifact@v2
-      # with:
-      #   name: test_coverage
-      #   path: testcoverage
-     # run: echo "Upload test coverage here..."
-        
-    - name: Build project
-      if: github.event_name == 'push'
-      run: echo "Build the project here..."
-
-    - name: Upload Build folder as Artifact
-      if: github.event_name == 'push'
-      uses: actions/upload-artifact@v2
-      with:
-        name: Build
-        path: build
-        
-    - name: Add Build Assets for Release
-      if: github.event_name == 'push' && github.ref == 'refs/heads/master'
-      run: zip -r build.zip build
-
-
-    - name: Create a Release
-      if: github.event_name == 'push' && github.ref == 'refs/heads/master'
-      run: npx semantic-release
-      env:
-        GITHUB_TOKEN: ${{ secrets.SEMANTIC_TOKEN }}
         
     - name: Create Issue (If Test Fail)
       if: steps.test.outcome != 'success'
@@ -112,3 +83,35 @@ jobs:
         SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
       
 
+
+
+   # - name: Upload Test coverage 
+      # uses: actions/upload-artifact@v2
+      # with:
+      #   name: test_coverage
+      #   path: testcoverage
+     # run: echo "Upload test coverage here..."
+        
+    - name: Build project
+      if: github.event_name == 'push'
+      run: echo "Build the project here..."
+
+    - name: Upload Build folder as Artifact
+      if: github.event_name == 'push'
+      uses: actions/upload-artifact@v2
+      with:
+        name: Build
+        path: build
+        
+    - name: Add Build Assets for Release
+      if: github.event_name == 'push' && github.ref == 'refs/heads/master'
+      run: zip -r build.zip build
+
+
+    - name: Create a Release
+      if: github.event_name == 'push' && github.ref == 'refs/heads/master'
+      run: npx semantic-release
+      env:
+        GITHUB_TOKEN: ${{ secrets.SEMANTIC_TOKEN }}
+        
+  
