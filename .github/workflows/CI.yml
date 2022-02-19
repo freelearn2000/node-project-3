@@ -7,7 +7,7 @@ on:
     branches: [develop, master]
     
 env:
-  NODE_VERSION: '14.x'                                             # set this to the node version to use
+  NODE_VERSION: '16.x'                                             # set this to the node version to use
 
 jobs:
   build:
@@ -65,23 +65,19 @@ jobs:
       with:
         payload: |
           {
-            "text":"" ,           
-            "blocks": 
-            [
+            "blocks": [
               {
                 "type": "section",
                 "text": {
                   "type": "mrkdwn",
-                  "text": "*Test result: * ${{ steps.test.outcome }}\n *Test Report :* <https://freelearn2000.github.io/node-project-3/index.html>"
+                  "text": "*Test result: `${{ steps.test.outcome }}`*\n *Test Report : * <https://freelearn2000.github.io/${{ github.event.repository.name }}>\n>*REPO : * ${{ github.event.repository.name }} \n>*WORKFLOW : * ${{github.workflow}} \n>*RUN URL: * <${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}> \n> *GITHUB ACTOR:* ${{github.actor}}"
                 }
               }
-
             ]
           }
       env:
         SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK }}
         SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
-      
 
 
 
