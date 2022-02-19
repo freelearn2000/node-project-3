@@ -7,7 +7,7 @@ on:
     branches: [develop, master]
     
 env:
-  NODE_VERSION: '14.x'                                             # set this to the node version to use
+  NODE_VERSION: '16.x'                                             # set this to the node version to use
 
 jobs:
   build:
@@ -39,6 +39,7 @@ jobs:
     - name: Run Tests
       run: npm run test
       id: test
+      
        
     - name: Deploy Test Report to GitHub Page
       if: always()
@@ -59,29 +60,25 @@ jobs:
         body:  '[Test Failed Report is out.](https://freelearn2000.github.io/node-project-3/index.html)'
         
     - name: Send Error messge to  Slack
-      if: steps.test.outcome != 'success'
+      if: always()
       id: slack
       uses: slackapi/slack-github-action@v1.18.0
       with:
         payload: |
           {
-            "text":"" ,           
-            "blocks": 
-            [
+            "blocks": [
               {
                 "type": "section",
                 "text": {
                   "type": "mrkdwn",
-                  "text": "*Test result: * ${{ steps.test.outcome }}\n *Test Report :* <https://freelearn2000.github.io/node-project-3/index.html>"
+                  "text": "*Test result: `${{ steps.test.outcome }}`*\n *Test Report : * <https://freelearn2000.github.io/${{ github.event.repository.name }}>\n>*REPO : * ${{ github.event.repository.name }} \n>*WORKFLOW : * ${{github.workflow}} \n>*RUN URL: * <${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}> \n> *GITHUB ACTOR:* ${{github.actor}}"
                 }
               }
-
             ]
           }
       env:
         SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK }}
         SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
-      
 
 
 
